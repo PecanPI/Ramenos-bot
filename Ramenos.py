@@ -30,11 +30,14 @@ async def getSpell(content):
     if "error" in json_api:
         print(api_return.text)
         return "YOU FOOL! RAMENOS DOES NOT KNOW THAT SPELL!"
-    message=f"{json_api['name']}\n{json_api['desc']}\nRange: {json_api['range']}\nComponents: {json_api['components']}"
+    message=f"{json_api['name']}\nSpell Level: {json_api['level']}\nCasting Time: {json_api['casting_time']}\nRange: {json_api['range']}\nComponents: {json_api['components']}"
     if "M" in json_api['components']:
         message+=f"\nMaterials: {json_api['material']}"
     if json_api['ritual']:
         message+=f"\nRitually Castable"
+    if json_api['concentration']:
+        message+=f"\nRequires Concentration"
+    message += f"\n{json_api['desc']}"
     return message
 
 #on set up
