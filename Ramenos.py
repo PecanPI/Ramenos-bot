@@ -25,17 +25,22 @@ async def sacrificeFrog(frog_sacrifice_count):
 
 async def getSpell(content):
     api_call = "-".join(content)
-    print(api_call)
     api_return = requests.get(f'https://www.dnd5eapi.co/api/spells/{api_call}')
     json_api = json.loads(api_return.text)
-    message=f"{json_api['name']}\n{str(json_api['desc'])}\nRange: {json_api['range']}\nComponents: {json_api['components']}\nMaterials: {json_api['material']}"
-
+    if "error" in json_api:
+        print(api_return.text)
+        return "YOU FOOL! RAMENOS DOES NOT KNOW THAT SPELL!"
+    message=f"{json_api['name']}\n{json_api['desc']}\nRange: {json_api['range']}\nComponents: {json_api['components']}"
+    if "M" in json_api['components']:
+        message+=f"\nMaterials: {json_api['material']}"
+    if json_api['ritual']:
+        message+=f"\nRitually Castable"
     return message
 
 #on set up
 @client.event
 async def on_ready():
-    print(f'{client.user} has logged in, {frog_sacrifice_count}')
+    print(f'{client.user} has logged in')
 
 
 #listens for messages
