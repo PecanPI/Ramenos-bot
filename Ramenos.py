@@ -60,6 +60,12 @@ async def on_message(message):
         await message.channel.send(count)
     if message.content.startswith('#Ramenos cast'):
         spell = await getSpell(message.content.split(" ")[2:])
-        await message.channel.send(spell)
+        if len(spell) <= 2000:
+            await message.channel.send(spell)
+        else:
+            for i in range(0,len(spell), 1500):
+                await message.channel.send(spell[i:i+1500])
+
+
 
 client.run(TOKEN)
