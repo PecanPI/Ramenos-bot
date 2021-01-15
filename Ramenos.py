@@ -11,21 +11,24 @@ load_dotenv()
 
 #dnd5e api
 url = "https://www.dnd5eapi.co/api/"
+frogpit = "./images/Frogpit.png"
 
 #Token provided by discord
 TOKEN = os.getenv('DISCORD_BOT_TOKEN')
 CHANNEL = os.getenv('DISCORD_CHANNEL_ID')
 
 client = discord.Client()
+
 frog_sacrifice_count = 0
 
+#Ramenos demands sacrifices
 async def sacrificeFrog(frog_sacrifice_count):
     return f'Another frog has been sacrificed to the SLUMBERING GOD, {frog_sacrifice_count} frogs have been sacrficed! RAMENOS DEMANDS MORE!'
 
-
+#gets spell from  dnd5e api and turns the return into a string
 async def getSpell(content):
     api_call = "-".join(content)
-    api_return = requests.get(f'https://www.dnd5eapi.co/api/spells/{api_call}')
+    api_return = requests.get(f'{url}/spells/{api_call}')
     json_api = json.loads(api_return.text)
     if "error" in json_api:
         print(api_return.text)
@@ -60,11 +63,16 @@ async def on_message(message):
         await message.channel.send(count)
     if message.content.startswith('#Ramenos cast'):
         spell = await getSpell(message.content.split(" ")[2:])
-        if len(spell) <= 2000:
+        #if spell length under 2000chars print full string, else break it up into chunks
+        
+        if len(spell) < 2000:
+            if spell == "YOU FOOL! RAMENOS DOES NOT KNOW THAT SPELL!":
+                await message.channel.send(file=discord.File(frogpit))
             await message.channel.send(spell)
         else:
             for i in range(0,len(spell), 1500):
                 await message.channel.send(spell[i:i+1500])
+        
 
 
 
