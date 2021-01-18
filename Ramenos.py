@@ -27,7 +27,7 @@ async def sacrificeFrog(frog_sacrifice_count):
 
 #gets spell from  dnd5e api and turns the return into a string
 async def getSpell(content):
-    api_call = "-".join(content)
+    api_call = "-".join(content).lower()
     api_return = requests.get(f'{url}/spells/{api_call}')
     json_api = json.loads(api_return.text)
     if "error" in json_api:
